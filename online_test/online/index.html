@@ -1,0 +1,1753 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Online Test</title>
+
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/cal.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="gate_st.css">
+  <script type="text/javascript" src="validate.js"></script>
+  <script type="text/javascript" src="cdtimer4.js"></script>
+  <script type="text/javascript" src="lib/json2.js"></script>
+  <script type="text/javascript" src="lib/jquery-1.10.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/cal.js"></script>
+  <script type="text/javascript" src="lib/jqueryajax.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js">
+  </script>
+  <script type="text/javascript" src="lib/grunt.js"></script>
+  <script type="text/javascript" src="lib/jqueryajax.js"></script>
+  <script type="text/javascript" src="lib/jstorage.js"></script>
+  <script type="text/javascript">
+    var hour;
+    var min;
+    var sec;
+    var tid = '4';
+    var total = 10;
+    var ssid = '7';
+    var take = '2';
+
+    var date = new Date();
+    date.setTime(date.getTime() + (500 * 60 * 1000));
+
+    hour = 0;
+    min = 10;
+    sec = 1;
+
+
+    //--------DEFAULT---------       
+    var txt = "";
+
+    function typeIn(k) {
+      if (k != "dot" && k != "minus" && k != "bksp") {
+        var n = k.substring(2, k.length);
+        txt = txt + n;
+        $("#indiv").html(txt);
+      } else {
+        if ($("#indiv").html() != "|") {
+          if (k == "bksp")
+            txt = txt.substring(0, txt.length - 1);
+          if (k == "dot")
+            txt = txt + ".";
+        } else {
+          if (k == "minus") {
+            txt = "-";
+          }
+        }
+
+        $("#indiv").html(txt);
+        if ($("#indiv").html() == "") {
+          $("#indiv").html("|");
+        }
+      }
+    }
+
+
+    //Auto saving state after some interval
+    $(document).ready(function () {
+      $('#faadu_message').hide();
+      $('#readylink').hide();
+
+      $('#full_paper_bg').hide();
+      $('#full_paper').hide();
+      $('#inpBoxStore').hide();
+
+      setInterval(function () {
+        if ($.cookie(ssid + tid + "test") == 'progress') {
+          $.cookie(ssid + tid + "hr", hour, {
+            expires: date
+          });
+          $.cookie(ssid + tid + "min", min, {
+            expires: date
+          });
+          $.cookie(ssid + tid + "sec", sec, {
+            expires: date
+          });
+
+
+        }
+
+      }, 5000);
+
+
+    });
+
+    // Preveventing Right Click
+    var oLastBtn = 0;
+    bIsMenu = false;
+    //No RIGHT CLICK************************
+    // ****************************
+    if (window.Event)
+      document.captureEvents(Event.MOUSEUP);
+
+    function nocontextmenu() {
+      event.cancelBubble = true
+      event.returnValue = false;
+      return false;
+    }
+
+    function norightclick(e) {
+      if (window.Event) {
+        if (e.which != 1)
+          return false;
+      } else
+      if (event.button != 1) {
+        event.cancelBubble = true
+        event.returnValue = false;
+        return false;
+      }
+    }
+    document.oncontextmenu = nocontextmenu;
+    document.onmousedown = norightclick;
+    //**************************************
+    // ****************************
+    // Block backspace onKeyDown************
+    // ***************************
+    function onKeyDown() {
+      if ((event.altKey) || ((event.keyCode == 8) &&
+          (event.srcElement.type != "text" &&
+            event.srcElement.type != "textarea" &&
+            event.srcElement.type != "password")) ||
+        ((event.ctrlKey) && ((event.keyCode == 78) || (event.keyCode == 82))) ||
+
+
+        (event.keyCode == 116)) {
+        event.keyCode = 0;
+        event.returnValue = false;
+      }
+    }
+
+
+    // Preveneting button
+    document.onkeydown = function () {
+      //alert(event.keyCode);
+
+      switch (event.keyCode) {
+
+        case 116: //F5 button
+          event.returnValue = false;
+          event.keyCode = 0;
+          event.stopPropagation();
+          return false;
+        case 82: //R button
+          if (event.ctrlKey) {
+            event.returnValue = false;
+            event.keyCode = 0;
+            event.stopPropagation();
+            return false;
+          }
+          case 8: //Backspace button
+            event.returnValue = false;
+            event.keyCode = 0;
+            event.stopPropagation();
+            return false;
+
+      }
+
+    }
+  </script>
+  <script type="text/javascript" src="testData7.js"></script>
+  <script type="text/javascript" src="gate_sc.js"></script>
+  <style type="text/css">
+    html,
+    body {
+      height: 100%;
+    }
+
+    #inpBox table tr td {
+      padding: 10px 20px;
+      background-color: white;
+    }
+
+    #inpBox table tr td:hover {
+      color: blue;
+      cursor: pointer;
+      background-color: lightgrey;
+    }
+
+    .timedesign {
+      background: #49b04f;
+      color: #fff;
+      margin-bottom: 10px;
+      text-align: center;
+      padding: 7px 0px;
+    }
+
+    .timedesign h3 {
+      margin-bottom: 0px;
+    }
+  </style>
+</head>
+
+<body>
+  <h2 style="color:red;margin-bottom:0px" align="center"><noscript>For the proper Functionality, You must use Javascript
+      enabled Browser.<br>Sorry for the Inconvenience..Please Try Again..</noscript></h2>
+
+  <div id="container" style="display: block;">
+    <div id="header">
+
+      <div id="faadu_message"
+        style="padding-top: 8px; margin-top: 0px; text-align: center; color: white; position: fixed; top: 0px; left: 0px; width: 100%; height: 42px; z-index: 999; background-color: green; font-weight: bold; font-size: 30px; display: none;">
+      </div>
+      <table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody>
+          <tr>
+            <td align="left" id="bannerImage">
+              <div style="margin-top:10px;text-align:center;">
+
+                <font size="4" color="#ffffff">
+                  <b>
+
+                    ONLINE TEST
+
+                  </b>
+                </font>
+
+
+                <!--<span class="btn waves-effect waves-light btn-rounded btn-sm btn-success" data-toggle="modal" data-target="#cal" >Calculator</span>-->
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="width:100%;height: 100%;">
+
+      <!-- CCFFFF--------------------Right Panel for Question List display------------------------ #fae6f6 -->
+      <div
+        style="background-color: rgb(228, 237, 247);float:right;width:20%;height:calc(100% - 45px);;overflow:auto;border-left: 3px solid #4d8cca;"
+        id="lpanel">
+        <div style="" class="timedesign">
+          <h3>Timer:<span id="timer" class="timerclass"> 00:00:00</span></h3>
+          <!-- <input type="hidden" value="00:07:44" name="timese" id="threeT"> -->
+          <input type="hidden" value="00:07:44" name="timese" id="threeT">
+        </div>
+        <div style="height:345px;overflow:auto;padding-left:10px;">
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <div id="1d" class="not_answered" onclick="fetch_q3(1)" style="cursor:pointer;">1</div>
+                </td>
+                <td>
+                  <div id="2d" class="not_visited" onclick="fetch_q3(2)" style="cursor:pointer;">2</div>
+                </td>
+                <td>
+                  <div id="3d" class="not_visited" onclick="fetch_q3(3)" style="cursor:pointer;">3</div>
+                </td>
+                <td>
+                  <div id="4d" class="not_visited" onclick="fetch_q3(4)" style="cursor:pointer;">4</div>
+                </td>
+                <td>
+                  <div id="5d" class="not_visited" onclick="fetch_q3(5)" style="cursor:pointer;">5</div>
+                </td>
+                <td>
+                  <div id="6d" class="not_visited" onclick="fetch_q3(6)" style="cursor:pointer;">6</div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div id="7d" class="not_visited" onclick="fetch_q3(7)" style="cursor:pointer;">7</div>
+                </td>
+                <td>
+                  <div id="8d" class="not_visited" onclick="fetch_q3(8)" style="cursor:pointer;">8</div>
+                </td>
+                <td>
+                  <div id="9d" class="not_visited" onclick="fetch_q3(9)" style="cursor:pointer;">9</div>
+                </td>
+                <td>
+                  <div id="10d" class="not_visited" onclick="fetch_q3(10)" style="cursor:pointer;">10</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="position:relative;bottom:0px;">
+          <p>
+            <img src="images/legend.png">
+          </p>
+          <p style="margin-top:10px;border-top: 1px solid #4d8cca;padding-top:10px;">
+
+            <input type="button" onclick="full_paper();" class="btn btn-primary"
+              style="cursor: pointer; background:#5361cb; border-color:#5361cb; margin-left:10px"
+              value="Question Paper">
+
+
+            <input type="button" onclick="conf_fin();" class="btn btn-primary" style="cursor: pointer;" value="Submit">
+          </p>
+
+        </div>
+      </div>
+
+      <div class="tc" id="main_tc" style="width:80%; height:calc(100% - 127px)">
+        <div style="border-bottom:1px solid #4d8cca; padding:5px;">
+
+          <div id="show_marks" style="font-size:14px;float:right;font-weight:bold;"><span
+              class="btn waves-effect waves-light btn-rounded btn-sm btn-success">Positive
+              Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+              class="btn waves-effect waves-light btn-rounded btn-sm btn-danger">Negative Marks:1</span></div>
+          <div style="color: #49b04f;font-size:14px;    font-weight: bold;">Question No. <span
+              class="btn btn-primary btn-circle btn-sm" style="height:30px; width:30px; padding:4px 8px;"
+              id="q_no">1</span></div>
+
+        </div>
+
+        <div>
+          <!-- Question panel Starts -->
+          <div id="qpanel" style="overflow:auto;height:100%;width:100%;">
+            <form id="form-0" style="width:100%;">
+
+              <input type="hidden" value="7" name="stutid">
+              <input type="hidden" value="4" name="testid">
+              <input type="hidden" value="1" name="quesid">
+              <input type="hidden" value="1" name="markes">
+
+              <p
+                style="text-align:left;font-size:100%;color:black;padding:20px 10px;background-color:#f5f9f4; font-family:Verdana,Arial; ">
+                A batsman finds that by scoring a century in the 11th innings of his test games he has bettered his
+                average of the previous ten innings by 5. What is his average after the 11th innings ? </p>
+
+
+              <table border="0" width="100%" class="ntab" style="display: inline-block;">
+                <tbody>
+                  <tr>
+                    <td>A. <input type="radio" id="1opta" name="answer" value="optiona"
+                        onclick="answer_q(7,4,1,this.id); myFunctiona(this.value);">40</td>
+                  </tr>
+                  <tr>
+                    <td>B. <input type="radio" id="1optb" name="answer" value="optionb"
+                        onclick="answer_q(7,4,1,this.id); myFunctiona(this.value);">50 </td>
+                  </tr>
+                  <tr>
+                    <td>C. <input type="radio" id="1optc" name="answer" value="optionc"
+                        onclick="answer_q(7,4,1,this.id); myFunctiona(this.value);">45 </td>
+                  </tr>
+                  <tr>
+                    <td>D. <input type="radio" id="1optd" name="answer" value="optiond"
+                        onclick="answer_q(7,4,1,this.id); myFunctiona(this.value);">95 </td>
+                  </tr>
+                  <tr>
+                    <td>E. <input type="radio" name="answer" value="optione" id="1opte"
+                        onclick="answer_q(7,4,1,this.id); myFunctiona(this.value);"> None of these </td>
+                  </tr>
+
+                  <tr>
+                    <td><input type="hidden" id="result" name="result"></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div id="marks1" style="opacity:0;"><span
+                  class="btn waves-effect waves-light btn-rounded btn-sm btn-success">Positive
+                  Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+                  class="btn waves-effect waves-light btn-rounded btn-sm btn-danger">Negative Marks:1</span></div>
+
+              <span style="color:#49b04f;border:black 1px dashed;padding:4px;" id="1fdhq"> <span
+                  style="color:#49b04f">Bookmark the above question:</span> <input type="radio" id="fdcb1"
+                  onclick="takeFeedback('H');">Yes &nbsp;&nbsp;&nbsp; <input style="display:none" type="radio"
+                  id="fdcb1" onclick="takeFeedback('E');"> </span>
+
+            </form>
+
+          </div>
+          <!-- Question panel Ends -->
+
+
+          <div style="border-top:1px solid #4d8cca;  padding:3px; text-align:center">
+
+
+
+            <input type="button" onclick="review();" class="btn btn-primary"
+              style="cursor: pointer;     background: #5361cb;border-color:5361cb" value="Mark for Review and Next">
+            <input type="button" onclick="unmark();" class="btn btn-primary"
+              style="cursor: pointer;     background: #ee0f0f; border-color:ee0f0f" value="Clear Response">
+            <input type="button" onclick="myFunction(); save_next(); restartTimer(0,10,0,'threeT');"
+              class="btn btn-primary" style="cursor: pointer;   " value="Save and Next">
+
+          </div>
+        </div>
+
+
+
+
+
+
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <div id="msg_area" style="display: none;">
+    <div id="pWait"
+      style="background: black; height: 100%; width: 100%; z-index: 1999; position: absolute; opacity: 0.6; display: none;">
+      <div style="top:45%;position:relative;color:white">
+        <center><img src="images/loading.gif" style="height:50px;width:50px;display:block;"><br>
+          <h2>Please wait</h2>
+        </center>
+      </div>
+    </div>
+
+    <div id="header">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody>
+          <tr>
+            <td align="left" id="bannerImage">
+              <div style="margin-top:10px;text-align:center;">
+
+                <font size="4" color="#ffffff">
+                  <b>
+
+                    ONLINE TEST
+
+                  </b>
+                </font>
+
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="mainleft" style="">
+      <div id="firstPage" style="overflow:auto;display:none;border:1px #CCC solid;padding:2px">
+        <!--	<iframe src="genins.php" height="80%" width="99%" ></iframe>-->
+      </div>
+      <div id="secondPagep1" style="overflow:auto;border:1px #CCC solid;padding:2px;">
+        <iframe src="csins.php" height="200" width="99%" style="border: 0;"></iframe>
+      </div>
+      <div id="instPagination" style="padding:10px;display:none;">
+        <center><a id="instPaginationa" onclick="showNext()" alt="" class="btn btn-primary" style="cursor:pointer;">Next
+            &gt;&gt;</a></center>
+      </div>
+      <div id="secondPagep2" style="text-align: center;">
+
+        <!--	<span class="highlightText">
+						<table><tr><td><input type="checkbox" id="disclaimer" onclick="linkdisp(this.id);"> </input></td>
+						<td><span style="width:90%:float:left;color:red;font-weight:bold;">The computer provided to me is in proper working condition. I have read and understood the instructions given above.</span></td></tr></table>
+					</span>--> <br> <br>
+        <div class="form-check form-check-inline">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="disclaimer" onclick="linkdisp(this.id);">
+            <label class="custom-control-label text-danger" for="disclaimer">Simulate Look of Real Exam</label>
+          </div>
+        </div>
+        <br> <br>
+        <center><span>
+            <font size="5"><input type="button" class="btn btn-success" value="START TEST" id="readylink"
+                onclick="startTest();" style="display: inline-block;"></font>
+          </span></center>
+        <br>
+      </div>
+
+    </div>
+    <div id="footer">
+
+      <div style="width:100%;padding-top:15px;">
+        <center>
+          <font color="white">
+
+            Version : 1.1
+
+          </font>
+        </center>
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div id="quest_store" style="display: none;">
+    <div id="1qs">
+      <form id="form-0" style="width:100%;">
+
+        <input type="hidden" value="7" name="stutid">
+        <input type="hidden" value="4" name="testid">
+        <input type="hidden" value="1" name="quesid">
+        <input type="hidden" value="1" name="markes">
+
+        <p
+          style="text-align:left;font-size:100%;color:black;padding:20px 10px;background-color:#f5f9f4; font-family:Verdana,Arial; ">
+          A batsman finds that by scoring a century in the 11th innings of his test games he has bettered his average of
+          the previous ten innings by 5. What is his average after the 11th innings ? </p>
+
+
+
+
+        <div>
+          <table border="0" width="100%" class="ntab">
+            <tbody>
+              <tr>
+                <td>A. <input type="radio" id="1opta" name="answer" value="optiona"
+                    onclick="answer_q(7,4,1,this.id); myFunctiona(this.value);">40</td>
+              </tr>
+              <tr>
+                <td>B. <input type="radio" id="1optb" name="answer" value="optionb"
+                    onclick="answer_q(7,4,1,this.id); myFunctiona(this.value);">50 </td>
+              </tr>
+              <tr>
+                <td>C. <input type="radio" id="1optc" name="answer" value="optionc"
+                    onclick="answer_q(7,4,1,this.id); myFunctiona(this.value);">45 </td>
+              </tr>
+              <tr>
+                <td>D. <input type="radio" id="1optd" name="answer" value="optiond"
+                    onclick="answer_q(7,4,1,this.id); myFunctiona(this.value);">95 </td>
+              </tr>
+              <tr>
+                <td>E. <input type="radio" name="answer" value="optione" id="1opte"
+                    onclick="answer_q(7,4,1,this.id); myFunctiona(this.value);"> None of these </td>
+              </tr>
+
+              <tr>
+                <td><input type="hidden" id="result" name="result"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="sample">
+
+        </div>
+
+
+        <div id="marks1" style="opacity:0;"><span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-success">Positive
+            Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-danger">Negative Marks:1</span></div>
+
+        <span style="color:#49b04f;border:black 1px dashed;padding:4px;" id="1fdhq"> <span
+            style="color:#49b04f">Bookmark the above question:</span> <input type="radio" id="fdcb1"
+            onclick="takeFeedback('H');">Yes &nbsp;&nbsp;&nbsp; <input style="display:none" type="radio" id="fdcb1"
+            onclick="takeFeedback('E');"> </span>
+
+      </form>
+    </div>
+
+
+
+
+
+    <div id="2qs">
+      <form id="form-0" style="width:100%;">
+
+        <input type="hidden" value="7" name="stutid">
+        <input type="hidden" value="4" name="testid">
+        <input type="hidden" value="2" name="quesid">
+        <input type="hidden" value="1" name="markes">
+
+        <p
+          style="text-align:left;font-size:100%;color:black;padding:20px 10px;background-color:#f5f9f4; font-family:Verdana,Arial; ">
+          The average of six numbers n1, n2, n3, n4, n5, n6, is while the average of n2, n3 and n4, is 6, n6 is greater
+          than n1 by 2 and n5 is 8. What are the values of n1 and n6 ? </p>
+
+
+
+
+
+        <table border="0" width="100%" class="ntab">
+          <tbody>
+            <tr>
+              <td>A. <input type="radio" id="2opta" name="answer" value="optiona"
+                  onclick="answer_q(7,4,2,this.id); myFunctiona(this.value);">
+                6, 8</td>
+            </tr>
+            <tr>
+              <td>B. <input type="radio" id="2optb" name="answer" value="optionb"
+                  onclick="answer_q(7,4,2,this.id); myFunctiona(this.value);">5,7 </td>
+            </tr>
+            <tr>
+              <td>C. <input type="radio" id="2optc" name="answer" value="optionc"
+                  onclick="answer_q(7,4,2,this.id); myFunctiona(this.value);">7,9 </td>
+            </tr>
+            <tr>
+              <td>D. <input type="radio" id="2optd" name="answer" value="optiond"
+                  onclick="answer_q(7,4,2,this.id); myFunctiona(this.value);">11,13 </td>
+            </tr>
+            <tr>
+              <td>E. <input type="radio" name="answer" value="optione" id="2opte"
+                  onclick="answer_q(7,4,2,this.id); myFunctiona(this.value);"> None of these </td>
+            </tr>
+
+            <tr>
+              <td><input type="hidden" id="result" name="result"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div id="marks2" style="opacity:0;"><span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-success">Positive
+            Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-danger">Negative Marks:1</span></div>
+
+        <span style="color:#49b04f;border:black 1px dashed;padding:4px;" id="2fdhq"> <span
+            style="color:#49b04f">Bookmark the above question:</span> <input type="radio" id="fdcb2"
+            onclick="takeFeedback('H');">Yes &nbsp;&nbsp;&nbsp; <input style="display:none" type="radio" id="fdcb2"
+            onclick="takeFeedback('E');"> </span>
+
+      </form>
+    </div>
+
+
+
+
+
+    <div id="3qs">
+      <form id="form-0" style="width:100%;">
+
+        <input type="hidden" value="7" name="stutid">
+        <input type="hidden" value="4" name="testid">
+        <input type="hidden" value="3" name="quesid">
+        <input type="hidden" value="1" name="markes">
+
+        <p
+          style="text-align:left;font-size:100%;color:black;padding:20px 10px;background-color:#f5f9f4; font-family:Verdana,Arial; ">
+          If 101525 = 33.5, then the value of log (3.25), when rounded to the nearest tenth is </p>
+
+
+
+
+
+        <table border="0" width="100%" class="ntab">
+          <tbody>
+            <tr>
+              <td>A. <input type="radio" id="3opta" name="answer" value="optiona"
+                  onclick="answer_q(7,4,3,this.id); myFunctiona(this.value);">1.5</td>
+            </tr>
+            <tr>
+              <td>B. <input type="radio" id="3optb" name="answer" value="optionb"
+                  onclick="answer_q(7,4,3,this.id); myFunctiona(this.value);">1.6 </td>
+            </tr>
+            <tr>
+              <td>C. <input type="radio" id="3optc" name="answer" value="optionc"
+                  onclick="answer_q(7,4,3,this.id); myFunctiona(this.value);">0.6 </td>
+            </tr>
+            <tr>
+              <td>D. <input type="radio" id="3optd" name="answer" value="optiond"
+                  onclick="answer_q(7,4,3,this.id); myFunctiona(this.value);">0.5 </td>
+            </tr>
+            <tr>
+              <td>E. <input type="radio" name="answer" value="optione" id="3opte"
+                  onclick="answer_q(7,4,3,this.id); myFunctiona(this.value);"> None of these </td>
+            </tr>
+
+            <tr>
+              <td><input type="hidden" id="result" name="result"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div id="marks3" style="opacity:0;"><span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-success">Positive
+            Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-danger">Negative Marks:1</span></div>
+
+        <span style="color:#49b04f;border:black 1px dashed;padding:4px;" id="3fdhq"> <span
+            style="color:#49b04f">Bookmark the above question:</span> <input type="radio" id="fdcb3"
+            onclick="takeFeedback('H');">Yes &nbsp;&nbsp;&nbsp; <input style="display:none" type="radio" id="fdcb3"
+            onclick="takeFeedback('E');"> </span>
+
+      </form>
+    </div>
+
+
+
+
+
+    <div id="4qs">
+      <form id="form-0" style="width:100%;">
+
+        <input type="hidden" value="7" name="stutid">
+        <input type="hidden" value="4" name="testid">
+        <input type="hidden" value="4" name="quesid">
+        <input type="hidden" value="1" name="markes">
+
+        <p
+          style="text-align:left;font-size:100%;color:black;padding:20px 10px;background-color:#f5f9f4; font-family:Verdana,Arial; ">
+          What is the percentage error, correct to three places of decimal, if 0.48 is written correct to one place to
+          decimal ? </p>
+
+
+
+
+
+        <table border="0" width="100%" class="ntab">
+          <tbody>
+            <tr>
+              <td>A. <input type="radio" id="4opta" name="answer" value="optiona"
+                  onclick="answer_q(7,4,4,this.id); myFunctiona(this.value);">0.02</td>
+            </tr>
+            <tr>
+              <td>B. <input type="radio" id="4optb" name="answer" value="optionb"
+                  onclick="answer_q(7,4,4,this.id); myFunctiona(this.value);">0.021 </td>
+            </tr>
+            <tr>
+              <td>C. <input type="radio" id="4optc" name="answer" value="optionc"
+                  onclick="answer_q(7,4,4,this.id); myFunctiona(this.value);">4.166 </td>
+            </tr>
+            <tr>
+              <td>D. <input type="radio" id="4optd" name="answer" value="optiond"
+                  onclick="answer_q(7,4,4,this.id); myFunctiona(this.value);">4.167 </td>
+            </tr>
+            <tr>
+              <td>E. <input type="radio" name="answer" value="optione" id="4opte"
+                  onclick="answer_q(7,4,4,this.id); myFunctiona(this.value);"> None of these </td>
+            </tr>
+
+            <tr>
+              <td><input type="hidden" id="result" name="result"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div id="marks4" style="opacity:0;"><span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-success">Positive
+            Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-danger">Negative Marks:1</span></div>
+
+        <span style="color:#49b04f;border:black 1px dashed;padding:4px;" id="4fdhq"> <span
+            style="color:#49b04f">Bookmark the above question:</span> <input type="radio" id="fdcb4"
+            onclick="takeFeedback('H');">Yes &nbsp;&nbsp;&nbsp; <input style="display:none" type="radio" id="fdcb4"
+            onclick="takeFeedback('E');"> </span>
+
+      </form>
+    </div>
+
+
+
+
+
+    <div id="5qs">
+      <form id="form-0" style="width:100%;">
+
+        <input type="hidden" value="7" name="stutid">
+        <input type="hidden" value="4" name="testid">
+        <input type="hidden" value="5" name="quesid">
+        <input type="hidden" value="1" name="markes">
+
+        <p
+          style="text-align:left;font-size:100%;color:black;padding:20px 10px;background-color:#f5f9f4; font-family:Verdana,Arial; ">
+          When 0.004284 is approximated to 0.0043 correct to the nearest ten thousandth, significant figures are<br>
+          <br>
+        </p>
+
+
+
+
+
+        <table border="0" width="100%" class="ntab">
+          <tbody>
+            <tr>
+              <td>A. <input type="radio" id="5opta" name="answer" value="optiona"
+                  onclick="answer_q(7,4,5,this.id); myFunctiona(this.value);">4 and 3</td>
+            </tr>
+            <tr>
+              <td>B. <input type="radio" id="5optb" name="answer" value="optionb"
+                  onclick="answer_q(7,4,5,this.id); myFunctiona(this.value);">0.4 and 3 </td>
+            </tr>
+            <tr>
+              <td>C. <input type="radio" id="5optc" name="answer" value="optionc"
+                  onclick="answer_q(7,4,5,this.id); myFunctiona(this.value);">0.4 and 2 </td>
+            </tr>
+            <tr>
+              <td>D. <input type="radio" id="5optd" name="answer" value="optiond"
+                  onclick="answer_q(7,4,5,this.id); myFunctiona(this.value);">4.167 </td>
+            </tr>
+            <tr>
+              <td>E. <input type="radio" name="answer" value="optione" id="5opte"
+                  onclick="answer_q(7,4,5,this.id); myFunctiona(this.value);"> None of these </td>
+            </tr>
+
+            <tr>
+              <td><input type="hidden" id="result" name="result"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div id="marks5" style="opacity:0;"><span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-success">Positive
+            Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-danger">Negative Marks:1</span></div>
+
+        <span style="color:#49b04f;border:black 1px dashed;padding:4px;" id="5fdhq"> <span
+            style="color:#49b04f">Bookmark the above question:</span> <input type="radio" id="fdcb5"
+            onclick="takeFeedback('H');">Yes &nbsp;&nbsp;&nbsp; <input style="display:none" type="radio" id="fdcb5"
+            onclick="takeFeedback('E');"> </span>
+
+      </form>
+    </div>
+
+
+
+
+
+    <div id="6qs">
+      <form id="form-0" style="width:100%;">
+
+        <input type="hidden" value="7" name="stutid">
+        <input type="hidden" value="4" name="testid">
+        <input type="hidden" value="6" name="quesid">
+        <input type="hidden" value="1" name="markes">
+
+        <p
+          style="text-align:left;font-size:100%;color:black;padding:20px 10px;background-color:#f5f9f4; font-family:Verdana,Arial; ">
+          If the value of pi is taken as 22/7 instead of 3.1416, what percentage error is made ? </p>
+
+
+
+
+
+        <table border="0" width="100%" class="ntab">
+          <tbody>
+            <tr>
+              <td>A. <input type="radio" id="6opta" name="answer" value="optiona"
+                  onclick="answer_q(7,4,6,this.id); myFunctiona(this.value);">0.04%</td>
+            </tr>
+            <tr>
+              <td>B. <input type="radio" id="6optb" name="answer" value="optionb"
+                  onclick="answer_q(7,4,6,this.id); myFunctiona(this.value);">-0.04% </td>
+            </tr>
+            <tr>
+              <td>C. <input type="radio" id="6optc" name="answer" value="optionc"
+                  onclick="answer_q(7,4,6,this.id); myFunctiona(this.value);">0.4% </td>
+            </tr>
+            <tr>
+              <td>D. <input type="radio" id="6optd" name="answer" value="optiond"
+                  onclick="answer_q(7,4,6,this.id); myFunctiona(this.value);">-0.4% </td>
+            </tr>
+            <tr>
+              <td>E. <input type="radio" name="answer" value="optione" id="6opte"
+                  onclick="answer_q(7,4,6,this.id); myFunctiona(this.value);"> None of these </td>
+            </tr>
+
+            <tr>
+              <td><input type="hidden" id="result" name="result"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div id="marks6" style="opacity:0;"><span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-success">Positive
+            Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-danger">Negative Marks:1</span></div>
+
+        <span style="color:#49b04f;border:black 1px dashed;padding:4px;" id="6fdhq"> <span
+            style="color:#49b04f">Bookmark the above question:</span> <input type="radio" id="fdcb6"
+            onclick="takeFeedback('H');">Yes &nbsp;&nbsp;&nbsp; <input style="display:none" type="radio" id="fdcb6"
+            onclick="takeFeedback('E');"> </span>
+
+      </form>
+    </div>
+
+    <div id="7qs">
+      <form id="form-0" style="width:100%;">
+
+        <input type="hidden" value="7" name="stutid">
+        <input type="hidden" value="4" name="testid">
+        <input type="hidden" value="7" name="quesid">
+        <input type="hidden" value="1" name="markes">
+
+        <p
+          style="text-align:left;font-size:100%;color:black;padding:20px 10px;background-color:#f5f9f4; font-family:Verdana,Arial; ">
+          6.75924 when rounded to the nearest thousandth becomes </p>
+
+
+
+
+
+        <table border="0" width="100%" class="ntab">
+          <tbody>
+            <tr>
+              <td>A. <input type="radio" id="7opta" name="answer" value="optiona"
+                  onclick="answer_q(7,4,7,this.id); myFunctiona(this.value);">6.760</td>
+            </tr>
+            <tr>
+              <td>B. <input type="radio" id="7optb" name="answer" value="optionb"
+                  onclick="answer_q(7,4,7,this.id); myFunctiona(this.value);">6.7592 </td>
+            </tr>
+            <tr>
+              <td>C. <input type="radio" id="7optc" name="answer" value="optionc"
+                  onclick="answer_q(7,4,7,this.id); myFunctiona(this.value);">6.759 </td>
+            </tr>
+            <tr>
+              <td>D. <input type="radio" id="7optd" name="answer" value="optiond"
+                  onclick="answer_q(7,4,7,this.id); myFunctiona(this.value);">6.7593 </td>
+            </tr>
+            <tr>
+              <td>E. <input type="radio" name="answer" value="optione" id="7opte"
+                  onclick="answer_q(7,4,7,this.id); myFunctiona(this.value);"> None of these </td>
+            </tr>
+
+            <tr>
+              <td><input type="hidden" id="result" name="result"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div id="marks7" style="opacity:0;"><span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-success">Positive
+            Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-danger">Negative Marks:1</span></div>
+
+        <span style="color:#49b04f;border:black 1px dashed;padding:4px;" id="7fdhq"> <span
+            style="color:#49b04f">Bookmark the above question:</span> <input type="radio" id="fdcb7"
+            onclick="takeFeedback('H');">Yes &nbsp;&nbsp;&nbsp; <input style="display:none" type="radio" id="fdcb7"
+            onclick="takeFeedback('E');"> </span>
+
+      </form>
+    </div>
+
+    <div id="8qs">
+      <form id="form-0" style="width:100%;">
+
+        <input type="hidden" value="7" name="stutid">
+        <input type="hidden" value="4" name="testid">
+        <input type="hidden" value="8" name="quesid">
+        <input type="hidden" value="1" name="markes">
+
+        <p
+          style="text-align:left;font-size:100%;color:black;padding:20px 10px;background-color:#f5f9f4; font-family:Verdana,Arial; ">
+          90099 when rounded to the nearest thousand becomes </p>
+
+
+
+
+
+        <table border="0" width="100%" class="ntab">
+          <tbody>
+            <tr>
+              <td>A. <input type="radio" id="8opta" name="answer" value="optiona"
+                  onclick="answer_q(7,4,8,this.id); myFunctiona(this.value);">0099</td>
+            </tr>
+            <tr>
+              <td>B. <input type="radio" id="8optb" name="answer" value="optionb"
+                  onclick="answer_q(7,4,8,this.id); myFunctiona(this.value);">9099 </td>
+            </tr>
+            <tr>
+              <td>C. <input type="radio" id="8optc" name="answer" value="optionc"
+                  onclick="answer_q(7,4,8,this.id); myFunctiona(this.value);">90000 </td>
+            </tr>
+            <tr>
+              <td>D. <input type="radio" id="8optd" name="answer" value="optiond"
+                  onclick="answer_q(7,4,8,this.id); myFunctiona(this.value);">90100 </td>
+            </tr>
+            <tr>
+              <td>E. <input type="radio" name="answer" value="optione" id="8opte"
+                  onclick="answer_q(7,4,8,this.id); myFunctiona(this.value);"> None of these </td>
+            </tr>
+
+            <tr>
+              <td><input type="hidden" id="result" name="result"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div id="marks8" style="opacity:0;"><span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-success">Positive
+            Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-danger">Negative Marks:1</span></div>
+
+        <span style="color:#49b04f;border:black 1px dashed;padding:4px;" id="8fdhq"> <span
+            style="color:#49b04f">Bookmark the above question:</span> <input type="radio" id="fdcb8"
+            onclick="takeFeedback('H');">Yes &nbsp;&nbsp;&nbsp; <input style="display:none" type="radio" id="fdcb8"
+            onclick="takeFeedback('E');"> </span>
+
+      </form>
+    </div>
+
+    <div id="9qs">
+      <form id="form-0" style="width:100%;">
+
+        <input type="hidden" value="7" name="stutid">
+        <input type="hidden" value="4" name="testid">
+        <input type="hidden" value="9" name="quesid">
+        <input type="hidden" value="1" name="markes">
+
+        <p
+          style="text-align:left;font-size:100%;color:black;padding:20px 10px;background-color:#f5f9f4; font-family:Verdana,Arial; ">
+          The ratio of ducks and frogs in a pond is 37 : 39 respectively. The average number of ducks and frogs in the
+          pond is 152. What is the number of frogs in the pond ? </p>
+
+
+
+
+
+        <table border="0" width="100%" class="ntab">
+          <tbody>
+            <tr>
+              <td>A. <input type="radio" id="9opta" name="answer" value="optiona"
+                  onclick="answer_q(7,4,9,this.id); myFunctiona(this.value);">148</td>
+            </tr>
+            <tr>
+              <td>B. <input type="radio" id="9optb" name="answer" value="optionb"
+                  onclick="answer_q(7,4,9,this.id); myFunctiona(this.value);">152 </td>
+            </tr>
+            <tr>
+              <td>C. <input type="radio" id="9optc" name="answer" value="optionc"
+                  onclick="answer_q(7,4,9,this.id); myFunctiona(this.value);">156 </td>
+            </tr>
+            <tr>
+              <td>D. <input type="radio" id="9optd" name="answer" value="optiond"
+                  onclick="answer_q(7,4,9,this.id); myFunctiona(this.value);">144 </td>
+            </tr>
+            <tr>
+              <td>E. <input type="radio" name="answer" value="optione" id="9opte"
+                  onclick="answer_q(7,4,9,this.id); myFunctiona(this.value);"> none of these </td>
+            </tr>
+
+            <tr>
+              <td><input type="hidden" id="result" name="result"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div id="marks9" style="opacity:0;"><span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-success">Positive
+            Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-danger">Negative Marks:1</span></div>
+
+        <span style="color:#49b04f;border:black 1px dashed;padding:4px;" id="9fdhq"> <span
+            style="color:#49b04f">Bookmark the above question:</span> <input type="radio" id="fdcb9"
+            onclick="takeFeedback('H');">Yes &nbsp;&nbsp;&nbsp; <input style="display:none" type="radio" id="fdcb9"
+            onclick="takeFeedback('E');"> </span>
+
+      </form>
+    </div>
+
+    <div id="10qs">
+      <form id="form-0" style="width:100%;">
+
+        <input type="hidden" value="7" name="stutid">
+        <input type="hidden" value="4" name="testid">
+        <input type="hidden" value="10" name="quesid">
+        <input type="hidden" value="1" name="markes">
+
+        <p
+          style="text-align:left;font-size:100%;color:black;padding:20px 10px;background-color:#f5f9f4; font-family:Verdana,Arial; ">
+          The number of employees in Companies A, B and C are in a rtio of 4 : 5 : 6 respectively. If the number of
+          employees in the three Companies is increased by 25%, 30% and 50% respectively, what will be the new ratio of
+          employees working in Companies A, B and C respectively ? </p>
+
+
+
+
+
+        <table border="0" width="100%" class="ntab">
+          <tbody>
+            <tr>
+              <td>A. <input type="radio" id="10opta" name="answer" value="optiona"
+                  onclick="answer_q(7,4,10,this.id); myFunctiona(this.value);">13 : 10 : 18</td>
+            </tr>
+            <tr>
+              <td>B. <input type="radio" id="10optb" name="answer" value="optionb"
+                  onclick="answer_q(7,4,10,this.id); myFunctiona(this.value);">10 : 13 : 17 </td>
+            </tr>
+            <tr>
+              <td>C. <input type="radio" id="10optc" name="answer" value="optionc"
+                  onclick="answer_q(7,4,10,this.id); myFunctiona(this.value);">13 : 15 : 18 </td>
+            </tr>
+            <tr>
+              <td>D. <input type="radio" id="10optd" name="answer" value="optiond"
+                  onclick="answer_q(7,4,10,this.id); myFunctiona(this.value);">Cannot be determined </td>
+            </tr>
+            <tr>
+              <td>E. <input type="radio" name="answer" value="optione" id="10opte"
+                  onclick="answer_q(7,4,10,this.id); myFunctiona(this.value);"> None of these </td>
+            </tr>
+
+            <tr>
+              <td><input type="hidden" id="result" name="result"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div id="marks10" style="opacity:0;"><span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-success">Positive
+            Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+            class="btn waves-effect waves-light btn-rounded btn-sm btn-danger">Negative Marks:1</span></div>
+
+        <span style="color:#49b04f;border:black 1px dashed;padding:4px;" id="10fdhq"> <span
+            style="color:#49b04f">Bookmark the above question:</span> <input type="radio" id="fdcb10"
+            onclick="takeFeedback('H');">Yes &nbsp;&nbsp;&nbsp; <input style="display:none" type="radio" id="fdcb10"
+            onclick="takeFeedback('E');"> </span>
+
+      </form>
+    </div>
+    <div id="full_paper_retrieve">
+      <h1
+        style="text-align:center; color:white; background-color:black;margin-bottom: 0;    text-transform: uppercase;">
+        Full Paper Preview</h1>
+
+
+      <div>
+        <table border="0" class="ntab" width="100%">
+          <tbody>
+            <tr>
+              <td style="padding:0px">
+                <p style="text-align:left;font-size:100%;color:#fff;padding:20px 10px;background-color:#2cabe3; "> Q1. A
+                  batsman finds that by scoring a century in the 11th innings of his test games he has bettered his
+                  average of the previous ten innings by 5. What is his average after the 11th innings ? </p>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td>A. 40</td>
+            </tr>
+            <tr>
+              <td>B. 50 </td>
+            </tr>
+            <tr>
+              <td>C. 45 </td>
+            </tr>
+            <tr>
+              <td>D. 95 </td>
+            </tr>
+            <tr>
+              <td>E. None of these </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="text-align:center; font-size:14px;"><span
+                    class="btn waves-effect waves-light btn-rounded btn-success">Positive
+                    Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+                    class="btn waves-effect waves-light btn-rounded btn-danger">Negative Marks:1</span></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <div>
+        <table border="0" class="ntab" width="100%">
+          <tbody>
+            <tr>
+              <td style="padding:0px">
+                <p style="text-align:left;font-size:100%;color:#fff;padding:20px 10px;background-color:#2cabe3; "> Q2.
+                  The average of six numbers n1, n2, n3, n4, n5, n6, is while the average of n2, n3 and n4, is 6, n6 is
+                  greater than n1 by 2 and n5 is 8. What are the values of n1 and n6 ? </p>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td>A.
+                6, 8</td>
+            </tr>
+            <tr>
+              <td>B. 5,7 </td>
+            </tr>
+            <tr>
+              <td>C. 7,9 </td>
+            </tr>
+            <tr>
+              <td>D. 11,13 </td>
+            </tr>
+            <tr>
+              <td>E. None of these </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="text-align:center; font-size:14px;"><span
+                    class="btn waves-effect waves-light btn-rounded btn-success">Positive
+                    Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+                    class="btn waves-effect waves-light btn-rounded btn-danger">Negative Marks:1</span></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+
+
+
+
+
+      <div>
+        <table border="0" class="ntab" width="100%">
+          <tbody>
+            <tr>
+              <td style="padding:0px">
+                <p style="text-align:left;font-size:100%;color:#fff;padding:20px 10px;background-color:#2cabe3; "> Q3.
+                  If 101525 = 33.5, then the value of log (3.25), when rounded to the nearest tenth is </p>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td>A. 1.5</td>
+            </tr>
+            <tr>
+              <td>B. 1.6 </td>
+            </tr>
+            <tr>
+              <td>C. 0.6 </td>
+            </tr>
+            <tr>
+              <td>D. 0.5 </td>
+            </tr>
+            <tr>
+              <td>E. None of these </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="text-align:center; font-size:14px;"><span
+                    class="btn waves-effect waves-light btn-rounded btn-success">Positive
+                    Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+                    class="btn waves-effect waves-light btn-rounded btn-danger">Negative Marks:1</span></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+
+
+
+
+
+      <div>
+        <table border="0" class="ntab" width="100%">
+          <tbody>
+            <tr>
+              <td style="padding:0px">
+                <p style="text-align:left;font-size:100%;color:#fff;padding:20px 10px;background-color:#2cabe3; "> Q4.
+                  What is the percentage error, correct to three places of decimal, if 0.48 is written correct to one
+                  place to decimal ? </p>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td>A. 0.02</td>
+            </tr>
+            <tr>
+              <td>B. 0.021 </td>
+            </tr>
+            <tr>
+              <td>C. 4.166 </td>
+            </tr>
+            <tr>
+              <td>D. 4.167 </td>
+            </tr>
+            <tr>
+              <td>E. None of these </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="text-align:center; font-size:14px;"><span
+                    class="btn waves-effect waves-light btn-rounded btn-success">Positive
+                    Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+                    class="btn waves-effect waves-light btn-rounded btn-danger">Negative Marks:1</span></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+
+
+
+
+
+      <div>
+        <table border="0" class="ntab" width="100%">
+          <tbody>
+            <tr>
+              <td style="padding:0px">
+                <p style="text-align:left;font-size:100%;color:#fff;padding:20px 10px;background-color:#2cabe3; "> Q5.
+                  When 0.004284 is approximated to 0.0043 correct to the nearest ten thousandth, significant figures
+                  are<br>
+                  <br>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td>A. 4 and 3</td>
+            </tr>
+            <tr>
+              <td>B. 0.4 and 3 </td>
+            </tr>
+            <tr>
+              <td>C. 0.4 and 2 </td>
+            </tr>
+            <tr>
+              <td>D. 4.167 </td>
+            </tr>
+            <tr>
+              <td>E. None of these </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="text-align:center; font-size:14px;"><span
+                    class="btn waves-effect waves-light btn-rounded btn-success">Positive
+                    Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+                    class="btn waves-effect waves-light btn-rounded btn-danger">Negative Marks:1</span></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+
+
+
+
+
+      <div>
+        <table border="0" class="ntab" width="100%">
+          <tbody>
+            <tr>
+              <td style="padding:0px">
+                <p style="text-align:left;font-size:100%;color:#fff;padding:20px 10px;background-color:#2cabe3; "> Q6.
+                  If the value of pi is taken as 22/7 instead of 3.1416, what percentage error is made ? </p>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td>A. 0.04%</td>
+            </tr>
+            <tr>
+              <td>B. -0.04% </td>
+            </tr>
+            <tr>
+              <td>C. 0.4% </td>
+            </tr>
+            <tr>
+              <td>D. -0.4% </td>
+            </tr>
+            <tr>
+              <td>E. None of these </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="text-align:center; font-size:14px;"><span
+                    class="btn waves-effect waves-light btn-rounded btn-success">Positive
+                    Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+                    class="btn waves-effect waves-light btn-rounded btn-danger">Negative Marks:1</span></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+
+
+
+
+
+      <div>
+        <table border="0" class="ntab" width="100%">
+          <tbody>
+            <tr>
+              <td style="padding:0px">
+                <p style="text-align:left;font-size:100%;color:#fff;padding:20px 10px;background-color:#2cabe3; "> Q7.
+                  6.75924 when rounded to the nearest thousandth becomes </p>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td>A. 6.760</td>
+            </tr>
+            <tr>
+              <td>B. 6.7592 </td>
+            </tr>
+            <tr>
+              <td>C. 6.759 </td>
+            </tr>
+            <tr>
+              <td>D. 6.7593 </td>
+            </tr>
+            <tr>
+              <td>E. None of these </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="text-align:center; font-size:14px;"><span
+                    class="btn waves-effect waves-light btn-rounded btn-success">Positive
+                    Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+                    class="btn waves-effect waves-light btn-rounded btn-danger">Negative Marks:1</span></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+
+
+
+
+
+      <div>
+        <table border="0" class="ntab" width="100%">
+          <tbody>
+            <tr>
+              <td style="padding:0px">
+                <p style="text-align:left;font-size:100%;color:#fff;padding:20px 10px;background-color:#2cabe3; "> Q8.
+                  90099 when rounded to the nearest thousand becomes </p>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td>A. 0099</td>
+            </tr>
+            <tr>
+              <td>B. 9099 </td>
+            </tr>
+            <tr>
+              <td>C. 90000 </td>
+            </tr>
+            <tr>
+              <td>D. 90100 </td>
+            </tr>
+            <tr>
+              <td>E. None of these </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="text-align:center; font-size:14px;"><span
+                    class="btn waves-effect waves-light btn-rounded btn-success">Positive
+                    Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+                    class="btn waves-effect waves-light btn-rounded btn-danger">Negative Marks:1</span></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+
+
+
+
+
+      <div>
+        <table border="0" class="ntab" width="100%">
+          <tbody>
+            <tr>
+              <td style="padding:0px">
+                <p style="text-align:left;font-size:100%;color:#fff;padding:20px 10px;background-color:#2cabe3; "> Q9.
+                  The ratio of ducks and frogs in a pond is 37 : 39 respectively. The average number of ducks and frogs
+                  in the pond is 152. What is the number of frogs in the pond ? </p>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td>A. 148</td>
+            </tr>
+            <tr>
+              <td>B. 152 </td>
+            </tr>
+            <tr>
+              <td>C. 156 </td>
+            </tr>
+            <tr>
+              <td>D. 144 </td>
+            </tr>
+            <tr>
+              <td>E. none of these </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="text-align:center; font-size:14px;"><span
+                    class="btn waves-effect waves-light btn-rounded btn-success">Positive
+                    Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+                    class="btn waves-effect waves-light btn-rounded btn-danger">Negative Marks:1</span></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+
+
+
+
+
+      <div>
+        <table border="0" class="ntab" width="100%">
+          <tbody>
+            <tr>
+              <td style="padding:0px">
+                <p style="text-align:left;font-size:100%;color:#fff;padding:20px 10px;background-color:#2cabe3; "> Q10.
+                  The number of employees in Companies A, B and C are in a rtio of 4 : 5 : 6 respectively. If the number
+                  of employees in the three Companies is increased by 25%, 30% and 50% respectively, what will be the
+                  new ratio of employees working in Companies A, B and C respectively ? </p>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td>A. 13 : 10 : 18</td>
+            </tr>
+            <tr>
+              <td>B. 10 : 13 : 17 </td>
+            </tr>
+            <tr>
+              <td>C. 13 : 15 : 18 </td>
+            </tr>
+            <tr>
+              <td>D. Cannot be determined </td>
+            </tr>
+            <tr>
+              <td>E. None of these </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="text-align:center; font-size:14px;"><span
+                    class="btn waves-effect waves-light btn-rounded btn-success">Positive
+                    Marks:1&nbsp;&nbsp;&nbsp;</span> <span
+                    class="btn waves-effect waves-light btn-rounded btn-danger">Negative Marks:1</span></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+
+
+    </div>
+    <form action="" method="" id="ansForm"><input type="text" name="qAns_re" value="4"><input type="text" name="sid"
+        value="7"><input type="text" name="1anss" value=""><input type="text" name="2anss" value=""><input type="text"
+        name="3anss" value=""><input type="text" name="4anss" value=""><input type="text" name="5anss" value=""><input
+        type="text" name="6anss" value=""><input type="text" name="7anss" value=""><input type="text" name="8anss"
+        value=""><input type="text" name="9anss" value=""><input type="text" name="10anss" value=""></form>
+  </div>
+
+  <div id="full_paper_bg"
+    style="position: fixed; z-index: 990; inset: 0px; background-color: black; opacity: 0.8; display: none;">
+    <div style="float:right; "> <img src="./images/close.png" style="opacity:1;width:50px;height:50px;"
+        onclick="full_paper_hide();"></div>
+  </div>
+  <div id="full_paper"
+    style="position: fixed; inset: 0px 5%; height: 100%; background-color: white; overflow: auto; opacity: 1; z-index: 999; display: none;">
+
+
+  </div>
+  <div id="inpBoxStore" style="display: none;">
+    <div id="inpBox" style="width:15%;height:50%;background-color:grey;border:1px solid black;">
+      <div id="indiv"
+        style="width:95%;height:14%;background-color:white;margin-top:1%;margin-left:1%;padding:1%;font-weight:bold;">|
+      </div>
+      <table>
+        <tbody>
+          <tr>
+            <td id="di1" onclick="typeIn(this.id);">1</td>
+            <td id="di2" onclick="typeIn(this.id);">2</td>
+            <td id="di3" onclick="typeIn(this.id);">3</td>
+          </tr>
+          <tr>
+            <td id="di4" onclick="typeIn(this.id);">4</td>
+            <td id="di5" onclick="typeIn(this.id);">5</td>
+            <td id="di6" onclick="typeIn(this.id);">6</td>
+          </tr>
+          <tr>
+            <td id="di7" onclick="typeIn(this.id);">7</td>
+            <td id="di8" onclick="typeIn(this.id);">8</td>
+            <td id="di9" onclick="typeIn(this.id);">9</td>
+          </tr>
+          <tr>
+            <td id="dot" onclick="typeIn(this.id);"><strong>.</strong></td>
+            <td id="di0" onclick="typeIn(this.id);">0</td>
+            <td id="minus" onclick="typeIn(this.id);"><strong>-</strong></td>
+          </tr>
+          <tr>
+            <td colspan="3" id="bksp" onclick="typeIn(this.id);">Backspace</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+  <script>
+    function full_paper() {
+      $('#full_paper_bg').fadeIn(400);
+      $('#full_paper').slideDown(400);
+      $('#full_paper').html($('#full_paper_retrieve').html());
+
+    }
+
+    function full_paper_hide() {
+      $('#full_paper_bg').fadeOut(300);
+      $('#full_paper').slideUp(400);
+
+    }
+
+    function showNext() {
+      $('#firstPage').hide();
+      $('#secondPagep1').show();
+
+      $('#instPaginationa').attr("onclick", "showPrev()");
+      $('#secondPagep2').show();
+    }
+
+    function showPrev() {
+
+
+      $('#instPaginationa').html("Next >>");
+      $('#instPaginationa').attr("onclick", "showNext()");
+      $('#secondPagep2').hide();
+    }
+
+    function linkdisp(k) {
+      if ($('#' + k).is(':checked'))
+        $('#readylink').show();
+      else
+        $('#readylink').hide();
+    }
+  </script>
+  <script type="text/javascript">
+    function myFunctiona(answer) {
+      document.getElementById("result").value = answer;
+    }
+
+    function myFunction() {
+      var stdid = document.getElementsByName("stutid")[0].value;
+      var testid = document.getElementsByName("testid")[0].value;
+      var qnid = document.getElementsByName("quesid")[0].value;
+      var marks = document.getElementsByName("markes")[0].value;
+      var stdanswer = document.getElementsByName("result")[0].value;
+      var spendtime = document.getElementsByName("timese")[0].value;
+      //var answerstd = document.getElementById("indiv").innerHTML;
+
+      // Returns successful data submission message when the entered information is stored in database.
+      var dataString = 'stdent=' + stdid + '&test=' + testid + '&question=' + qnid + '&mark=' + marks + '&answer=' +
+        stdanswer + '&spendt=' + spendtime;
+      if (stdid == '' || testid == '' || qnid == '' || marks == '' || stdanswer == '' || spendtime == '') {
+        //alert("Please Fill All Fields");
+      } else {
+        // AJAX code to submit form.
+        $.ajax({
+          type: "POST",
+          url: "ajaxjs.php",
+          data: dataString,
+          cache: false,
+          success: function (html) {
+            //alert(html);
+          }
+        });
+      }
+      return false;
+    }
+  </script>
+  <script type="text/javascript">
+    var timers1 = {};
+
+    function countDown1(hrs, min1, sec1, gid) {
+      sec1--;
+      if (sec1 == -01) {
+        sec1 = 59;
+        min1 = min1 - 1;
+      } else {
+        min1 = min1;
+      }
+      if (min1 == -01) {
+        min1 = 59;
+        hrs = hrs - 1;
+      } else {
+        hrs = hrs;
+      }
+      if (sec1 <= 9) {
+        sec1 = "0" + sec1;
+      }
+      if (hrs <= 9) {
+        hrs = "0" + hrs;
+      }
+      time = hrs + ":" + (min1 <= 9 ? "0" + min1 : min1) + ":" + sec1 + "";
+      if (document.getElementById) {
+        document.getElementById(gid).value = time;
+        document.getElementById('timer').innerHTML = time; // timer will run in timer area
+      }
+      timers1[gid] = window.setTimeout("countDown1(" + hrs + "," + min1 + "," + sec1 + ",'" + gid + "');", 1000);
+      if (hrs == '00' && min1 == '00' && sec1 == '00') {
+        sec1 = "00";
+        window.clearTimeout(timers1[gid]);
+        testOver();
+      }
+
+    }
+
+    function addLoadEvent(func) {
+      var oldonload = window.onload;
+      if (typeof window.onload != 'function') {
+        window.onload = func;
+      } else {
+        window.onload = function () {
+          if (oldonload) {
+            oldonload();
+          }
+          func();
+        }
+      }
+    }
+
+    addLoadEvent(function () {
+      //countDown1(0,0,4,'threeT'); // for testing purpose
+      countDown1(0, 10, 0, 'threeT');
+
+    });
+
+    function restartTimer(hrs, min1, sec1, gid) {
+      window.clearTimeout(timers1[gid]);
+      timers1[gid] = countDown1(hrs, min1, sec1, gid);
+    }
+  </script>
+  <iframe frameborder="0" scrolling="no" style="background-color: transparent; border: 0px; display: none;"></iframe>
+  <div id="GOOGLE_INPUT_CHEXT_FLAG" input=""
+    input_stat="{&quot;tlang&quot;:true,&quot;tsbc&quot;:true,&quot;pun&quot;:true,&quot;mk&quot;:true,&quot;ss&quot;:true}"
+    style="display: none;"></div>
+
+</body>
+
+</html>

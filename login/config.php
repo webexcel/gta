@@ -2,7 +2,7 @@
 
 
 error_reporting(E_ALL ^ E_DEPRECATED);
-echo "HI";
+echo "HIi";
 exit();
 $dbhost = 'localhost';
 $dbuser = 'namachi';
